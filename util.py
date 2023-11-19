@@ -250,7 +250,7 @@ def normalized_cross_correlation(a: Tensor, b: Tensor):
 
 def fft_normalized_cross_correlation(a: Tensor, b: Tensor):
     '''
-    Get normalized cross_correlation of two tensors.
+    Get normalized cross_correlation of two tensors.                                            
     The output is 2D tensor.
     Using fft, so it shows the registration error.
     '''
@@ -375,6 +375,9 @@ Z_list = [
     "sin_10PHI*R10square",
 ]
 def zernike(coeff, shape=(1024,1024),portion=1,R=None,PHI=None):
+    '''
+    this function is made to calculate zernike polynomial.
+    '''
     if R is None:
         X,Y,R,_,_,_ = span(shape,resol=1/(shape[0]//2))
     if PHI is None:
@@ -742,6 +745,11 @@ class tilt_correction(Module):
 
 
 def get_freq_list_from_back_data(img_list,resol, wl, scale_factor = 4, device = "cpu"):
+    '''
+    when interferogram is given, this function can find the maximum frequency of each image.
+    scale_factor is the factor to increase the size of the image, which is used to find the maximum frequency, default is 4.
+    The output shape is (img_list.shape[0],2), which is the list of the maximum frequency of each images.
+    '''
     H,V = img_list.shape[-2:]
     X,Y,R,Fx,Fy,Fr = span((H*scale_factor,V*scale_factor),resol=resol,device=device)
     Fimg = FT(my_pad(img_list[0],"shape",(H*scale_factor,V*scale_factor))) * (R>resol*200) # To ensure the zero frequency is not included
@@ -760,6 +768,9 @@ def get_freq_list_from_back_data(img_list,resol, wl, scale_factor = 4, device = 
     return freq_list
 
 def median_filter(img,kernel_size = 3):
+    '''
+    median filter for 2D image.
+    '''
     if kernel_size%2 == 0:
         raise ValueError(f"Invalid kernel_size: {kernel_size} should be odd")
     pad = kernel_size//2
